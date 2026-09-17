@@ -1,4 +1,11 @@
 get_property(src_opus_dnn TARGET opus-dnn PROPERTY _EP_SOURCE_DIR)
+# MinGW aarch64 has no CPU detection backend in celt/arm/armcpu.c,
+# so disable rtcd (ARM asm + runtime CPU detection) only for aarch64.
+if(TARGET_CPU STREQUAL "aarch64")
+    set(OPUS_RTCD false)
+else()
+    set(OPUS_RTCD true)
+endif()
 ExternalProject_Add(opus
     DEPENDS
         opus-dnn
@@ -20,7 +27,7 @@ ExternalProject_Add(opus
         -Dextra-programs=disabled
         -Dtests=disabled
         -Ddocs=disabled
-        -Drtcd=${TARGET_CPU STREQUAL "aarch64" ? "false" : "true"}
+        -Drtcd=${OPUS_RTCD}
     BUILD_COMMAND ${EXEC} ninja -C <BINARY_DIR>
     INSTALL_COMMAND ${EXEC} ninja -C <BINARY_DIR> install
             COMMAND bash -c "rm -rf ${src_opus_dnn}/models" # To save space
