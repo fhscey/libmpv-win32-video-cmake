@@ -1,10 +1,11 @@
 get_property(src_opus_dnn TARGET opus-dnn PROPERTY _EP_SOURCE_DIR)
 # MinGW aarch64 has no CPU detection backend in celt/arm/armcpu.c,
 # so disable rtcd (ARM asm + runtime CPU detection) only for aarch64.
+# rtcd is a meson "feature" option: only "enabled"/"disabled"/"auto" are valid.
 if(TARGET_CPU STREQUAL "aarch64")
-    set(OPUS_RTCD false)
+    set(OPUS_RTCD disabled)
 else()
-    set(OPUS_RTCD true)
+    set(OPUS_RTCD enabled)
 endif()
 ExternalProject_Add(opus
     DEPENDS
