@@ -20,6 +20,7 @@ ExternalProject_Add(opus
         -Dextra-programs=disabled
         -Dtests=disabled
         -Ddocs=disabled
+        -Drtcd=${TARGET_CPU STREQUAL "aarch64" ? "false" : "true"}
     BUILD_COMMAND ${EXEC} ninja -C <BINARY_DIR>
     INSTALL_COMMAND ${EXEC} ninja -C <BINARY_DIR> install
             COMMAND bash -c "rm -rf ${src_opus_dnn}/models" # To save space
